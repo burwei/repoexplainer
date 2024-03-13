@@ -76,6 +76,7 @@ repoexpl_overview.md example
 ## components
  - package: service
      - UserService
+         - file: /user/internal/service/user.go
          - type: struct
          - fields: 
              - UserRepo
@@ -84,6 +85,7 @@ repoexpl_overview.md example
              - AddUser(user model.User) (string, error)
              - UpdateUser(user model.User) (model.User, error)
      - UserRepo
+         - file: /user/internal/service/user.go
          - type: interface
          - fields:
          - methods:
@@ -91,6 +93,7 @@ repoexpl_overview.md example
              - PutUser(user model.User) error
  - package: repo
      - DynamodbUserRepo
+         - file: /user/internal/repo/dynamodb.go
          - type: struct
          - fields:
              - client *dynamodb.Client
@@ -100,6 +103,7 @@ repoexpl_overview.md example
              - PutUser(user model.User) error
  - package handler
      - UserService
+         - file: /user/internal/handler/echo.go
          - type: interface
          - fields: 
          - methods:
@@ -107,6 +111,7 @@ repoexpl_overview.md example
              - AddUser(user model.User) (string, error)
              - UpdateUser(user model.User) (model.User, error)
      - EchoHandler
+         - file: /user/internal/handler/echo.go
          - type: struct
          - fields:
              - userService UserService
@@ -115,6 +120,7 @@ repoexpl_overview.md example
              - AddUser(c echo.Context) error
              - UpdateUser(c echo.Context) error
      - ApigatewayHandler
+         - file: /user/internal/handler/aws_apigateway.go
          - type: struct
          - fields:
              - userService UserService
@@ -124,6 +130,7 @@ repoexpl_overview.md example
              - UpdateUser(ctx context.Context, request events.APIGatewayV2HTTPRequest,)(events.APIGatewayV2HTTPResponse, error)
  - package main
      - main
+         - file: /user/cmd/main.go
          - type: function
          - fields: 
          - methods:
