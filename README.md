@@ -10,32 +10,30 @@ Generate a Markdown file to describe an existing repo, so that developer could e
     /repo_explainer
     /chatroom_service
   /component_finder
-    /go
+    /golang
       struct.go
       interface.go
       function.go
-      const.go
-      var.go
-  /endpoint_finder
-    /go
-      echo.go
-      aws_apigateway.go
-      grpc.go
-  /markdowngen
+      global.go
+  /reportgen
       dir_tree.go
       finder_factory.go
       generator.go
+      interface.go
+      model.go
   go.mod
 ```
 
 ## how does it work
 ```mermaid
 flowchart TD
-    A(["run repoexplainer"]) --> B[get directory tree]
-    B --> C[get all components]
-    C --> D[get all endpoint declaration files]
-    D --> E[generate Markdown file content]
-    E --> F(["output Markdown context to repoexplainer.md"])
+    A(["run repoexplainer"]) --> B[traverse through files and directories]
+    B --> C[capture components from the file]
+    C --> D[archive file content if it's an endpoint declaration file]
+    D --> E{completed scanning all files}
+    E -->|no| B
+    E -->|yes| F[generate the report file content in Markdown format]
+    F --> G(["output result to repoexplainer.md"])
 ```
 
 ## what does the markdown file look like
@@ -161,111 +159,35 @@ repoexplainer.md example
          - type: function
          - fields: none
          - methods: none
-
-## endpoints
- - server 1:
-     - file: /user/cmd/echo/main.go
-     - context:
-        ```
-        package main
-
-        import (
-            "log"
-
-            "github.com/labstack/echo/v4"
-            "local/user/internal/user/handler"
-            "local/user/internal/user/repo"
-            "local/user/internal/user/service"
-        )
-
-        func main() {
-            userRepo, err := repo.NewDynamodbUserRepo()
-            if err != nil {
-                log.Fatalf("can't new a DynamodbUserRepo: %s", err.Error())
-            }
-
-            userService, err := service.NewUserService(userRepo, userPicRepo)
-            if err != nil {
-                log.Fatalf("can't new a SimpleUserService: %s", err.Error())
-            }
-
-            handler := handler.NewEchoHandler(userService)
-
-            e := echo.New()
-            e.GET("/user", handler.GetUsers)
-            e.POST("/user", handler.AddUser)
-            e.PUT("/user", handler.UpdateUser)
-
-            e.Logger.Fatal(e.Start(":1323"))
-        }
-        ```
- - server 2:
-     - file: /user/cmd/aws_lambda/main.go
-     - context:
-        ```
-        package main
-
-        import (
-            "context"
-            "fmt"
-            "log"
-            "net/http"
-
-            "github.com/aws/aws-lambda-go/events"
-            "github.com/aws/aws-lambda-go/lambda"
-            "local/user/internal/user/handler"
-            "local/user/internal/user/repo"
-            "local/user/internal/user/service"
-        )
-
-        const (
-            routeUser       = "v1/user"
-        )
-
-        var userService handler.UserService
-
-        func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest,
-        ) (events.APIGatewayV2HTTPResponse, error) {
-            log.Printf("request: %+v\n", request)
-
-            handler := handler.NewApiGatewayHandler(userService)
-
-            switch request.PathParameters["proxy"] {
-            case routeUser:
-                switch request.RequestContext.HTTP.Method {
-                case http.MethodGet:
-                    return handler.GetUsers(ctx, request)
-                case http.MethodPost:
-                    return handler.AddUser(ctx, request)
-                case http.MethodPut:
-                    return handler.UpdateUser(ctx, request)
-                default:
-                    return events.APIGatewayV2HTTPResponse{
-                        StatusCode: http.StatusNotFound,
-                        Body:       fmt.Sprintf("unsupported HTTP method: %s", request.RequestContext.HTTP.Method),
-                    }, nil
-                }
-            default:
-                return events.APIGatewayV2HTTPResponse{
-                    StatusCode: http.StatusNotFound,
-                    Body:       fmt.Sprintf("can't find path: %s", request.PathParameters["proxy"]),
-                }, nil
-            }
-        }
-
-        func main() {
-            userRepo, err := repo.NewDynamodbUserRepo()
-            if err != nil {
-                log.Fatalf("can't new a DynamodbUserRepo: %s", err.Error())
-            }
-
-            userService, err = service.NewDefaultUserService(userRepo, userPicRepo)
-            if err != nil {
-                log.Fatalf("can't new a SimpleUserService: %s", err.Error())
-            }
-
-            lambda.Start(handleRequest)
-        }
-
-        ```
 ```
+
+## details about how to build repoexplain from scratch
+### componenets
+ - package: reportgen
+   - ComponentFinder (interface):  
+     Componentfinder finds the definition of components like interface, struct, function ...etc. It takes one line of code as input and the input lines will always be continuous in a same file before reading the "EOF". The finder still store the component and provide getter for others to access these components.
+   - FileTraverser (struct): Use current directory as the root of a tree, traverse through all files in the file tree. Except providing the next file, FileTraverser also store the path of each file and could print the directory structure after the traverse is finished.
+   - ReportGenerator (struct): Use FileTraverser and CompnentFinder to generate the report markdown file in the format mentioned above.  
+   - FinderFactory (struct): All finder should be registered here. ReportGenerator will use FinderFactory to generate all finders. 
+### models
+ - package: reportgen
+   - Component
+     - file: /repoexplainer/reportgen/model.go
+     - content:
+       ```
+       type Component struct {
+            File    string `json:"file"`
+            Package string `json:"package"`
+            Type    string `json:"type"`
+            Fields  []string `json:"fields"`
+            Methods []string `json:"methods"`
+       }
+       ``` 
+   - ComponentMap
+     - file: /repoexplainer/reportgen/model.go
+     - content:
+       ```
+       // the key is the last two directory name, ex: /internal/repo
+       type ComponentMap map[string][]Component
+       ``` 
+
