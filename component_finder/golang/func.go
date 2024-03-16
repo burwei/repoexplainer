@@ -17,13 +17,9 @@ type FuncFinder struct {
 	dirPath    string
 }
 
-func NewFuncFinder(dirPath, fileName string, compMap *reportgen.ComponentMap) *FuncFinder {
-	if compMap == nil {
-		compMap = &reportgen.ComponentMap{}
-	}
-
+func NewFuncFinder(dirPath, fileName string) *FuncFinder {
 	return &FuncFinder{
-		components: *compMap,
+		components: reportgen.ComponentMap{},
 		dirPath:    dirPath,
 		fileName:   fileName,
 	}
@@ -56,7 +52,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 	}
 }
 
-func (ff *FuncFinder) GetFuncComponents() reportgen.ComponentMap {
+func (ff *FuncFinder) GetComponents() reportgen.ComponentMap {
 	ff.mu.Lock()
 	defer ff.mu.Unlock()
 
@@ -69,7 +65,7 @@ func (ff *FuncFinder) GetFuncComponents() reportgen.ComponentMap {
 	return compCopy
 }
 
-func (ff *FuncFinder) Close() {
+func (ff *FuncFinder) FileEnd() {
 	ff.mu.Lock()
 	defer ff.mu.Unlock()
 

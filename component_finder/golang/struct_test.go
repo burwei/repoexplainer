@@ -149,8 +149,7 @@ type User struct {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			components := make(reportgen.ComponentMap)
-			sf := NewStructFinder(tc.dirPath, tc.fileName, &components)
+			sf := NewStructFinder(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
@@ -158,9 +157,9 @@ type User struct {
 				sf.FindComponent(line)
 			}
 			// Finalize parsing by calling Close
-			sf.Close()
+			sf.FileEnd()
 
-			components = sf.GetComponents()
+			components := sf.GetComponents()
 
 			assert.Equal(t, tc.expectedComp, components)
 		})

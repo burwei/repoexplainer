@@ -130,8 +130,7 @@ type UserInterface interface {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			components := make(reportgen.ComponentMap)
-			ifd := NewInterfaceFinder(tc.dirPath, tc.fileName, &components)
+			ifd := NewInterfaceFinder(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
@@ -141,7 +140,7 @@ type UserInterface interface {
 			// Finalize parsing by calling Close
 			ifd.Close()
 
-			components = ifd.GetComponents()
+			components := ifd.GetComponents()
 
 			assert.Equal(t, tc.expectedComp, components)
 		})

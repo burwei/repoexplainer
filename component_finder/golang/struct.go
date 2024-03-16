@@ -19,13 +19,9 @@ type StructFinder struct {
 	dirPath       string
 }
 
-func NewStructFinder(dirPath, fileName string, compMap *reportgen.ComponentMap) *StructFinder {
-	if compMap == nil {
-		compMap = &reportgen.ComponentMap{}
-	}
-
+func NewStructFinder(dirPath, fileName string) *StructFinder {
 	return &StructFinder{
-		components: *compMap,
+		components: reportgen.ComponentMap{},
 		dirPath:    dirPath,
 		fileName:   fileName,
 	}
@@ -99,7 +95,7 @@ func (sf *StructFinder) GetComponents() reportgen.ComponentMap {
 	return compCopy
 }
 
-func (sf *StructFinder) Close() {
+func (sf *StructFinder) FileEnd() {
 	sf.mu.Lock()
 	defer sf.mu.Unlock()
 

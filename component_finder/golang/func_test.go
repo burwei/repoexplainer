@@ -95,7 +95,7 @@ func SecondFunc() int {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			ff := NewFuncFinder(tc.dirPath, tc.fileName, &reportgen.ComponentMap{})
+			ff := NewFuncFinder(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
@@ -103,7 +103,9 @@ func SecondFunc() int {
 				ff.FindComponent(line)
 			}
 
-			components := ff.GetFuncComponents()
+			ff.FileEnd()
+
+			components := ff.GetComponents()
 
 			assert.Equal(t, tc.expectedComp, components)
 		})

@@ -18,13 +18,9 @@ type InterfaceFinder struct {
 	dirPath          string
 }
 
-func NewInterfaceFinder(dirPath, fileName string, compMap *reportgen.ComponentMap) *InterfaceFinder {
-	if compMap == nil {
-		compMap = &reportgen.ComponentMap{}
-	}
-
+func NewInterfaceFinder(dirPath, fileName string) *InterfaceFinder {
 	return &InterfaceFinder{
-		components: *compMap,
+		components: reportgen.ComponentMap{},
 		dirPath:    dirPath,
 		fileName:   fileName,
 	}
