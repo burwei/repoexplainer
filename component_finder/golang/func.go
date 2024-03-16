@@ -10,19 +10,28 @@ import (
 
 // FuncFinder is a ComponentFinder implementation for finding function definitions within Go files.
 type FuncFinder struct {
-	mu         sync.Mutex
-	components reportgen.ComponentMap
-	currentPkg string
-	fileName   string
-	dirPath    string
+	mu          sync.Mutex
+	components  reportgen.ComponentMap
+	fileName    string
+	dirPath     string
+	packageName string
 }
 
-func NewFuncFinder(dirPath, fileName string) *FuncFinder {
+func NewFuncFinder() *FuncFinder {
 	return &FuncFinder{
 		components: reportgen.ComponentMap{},
-		dirPath:    dirPath,
-		fileName:   fileName,
 	}
+}
+
+// SetFile sets the directory path and file name for the current file being processed.
+// It's the beginning of a new file.
+func (ff *FuncFinder) SetFile(dirPath, fileName string) {
+	ff.mu.Lock()
+	defer ff.mu.Unlock()
+
+	ff.dirPath = dirPath
+	ff.fileName = fileName
+	ff.packageName = ""
 }
 
 func (ff *FuncFinder) FindComponent(line string) {
@@ -30,7 +39,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 	defer ff.mu.Unlock()
 
 	if strings.HasPrefix(line, "package ") {
-		ff.currentPkg = strings.TrimSpace(line[len("package "):])
+		ff.packageName = strings.TrimSpace(line[len("package "):])
 		return
 	}
 
@@ -44,7 +53,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 			// So, we don't need to handle duplicate function definitions
 			ff.components[compKey] = reportgen.Component{
 				File:    filepath.Join(ff.dirPath, ff.fileName),
-				Package: ff.currentPkg,
+				Package: ff.packageName,
 				Name:    funcSignature,
 				Type:    "func",
 			}
@@ -57,6 +66,7 @@ func (ff *FuncFinder) GetComponents() reportgen.ComponentMap {
 	defer ff.mu.Unlock()
 
 	// Return a copy of the map to avoid race conditions
+	// when the caller iterates over the map
 	compCopy := make(reportgen.ComponentMap)
 	for k, v := range ff.components {
 		compCopy[k] = v
@@ -65,11 +75,19 @@ func (ff *FuncFinder) GetComponents() reportgen.ComponentMap {
 	return compCopy
 }
 
-func (ff *FuncFinder) FileEnd() {
-	ff.mu.Lock()
-	defer ff.mu.Unlock()
+func (ff *FuncFinder) ConvertFuncCompKey(compKey string) (string, string) {
+	parts := strings.Split(compKey, ":")
+	comp := ff.components[compKey]
+	structCompKey := filepath.Dir(comp.File) + ":" + parts[0]
+	funcName := strings.Split(comp.Name, "(")[0]
+	dirPathBasedCompKey := filepath.Dir(comp.File) + ":" + funcName
 
-	ff.currentPkg = ""
+	// receiver part of the compKey is empty
+	if parts[0] == "" {
+		return "", dirPathBasedCompKey
+	}
+
+	return structCompKey, dirPathBasedCompKey
 }
 
 func getFuncCompKey(receiver, funcSignature string) string {

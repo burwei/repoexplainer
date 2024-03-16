@@ -12,18 +12,28 @@ import (
 type InterfaceFinder struct {
 	mu               sync.Mutex
 	components       reportgen.ComponentMap
-	currentPkg       string
 	currentInterface string
 	fileName         string
 	dirPath          string
+	packageName      string
 }
 
-func NewInterfaceFinder(dirPath, fileName string) *InterfaceFinder {
+func NewInterfaceFinder() *InterfaceFinder {
 	return &InterfaceFinder{
 		components: reportgen.ComponentMap{},
-		dirPath:    dirPath,
-		fileName:   fileName,
 	}
+}
+
+// SetFile sets the directory path and file name for the current file being processed.
+// It's the beginning of a new file.
+func (ifd *InterfaceFinder) SetFile(dirPath, fileName string) {
+	ifd.mu.Lock()
+	defer ifd.mu.Unlock()
+
+	ifd.dirPath = dirPath
+	ifd.fileName = fileName
+	ifd.packageName = ""
+	ifd.currentInterface = ""
 }
 
 func (ifd *InterfaceFinder) FindComponent(line string) {
@@ -31,7 +41,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 	defer ifd.mu.Unlock()
 
 	if strings.HasPrefix(line, "package ") {
-		ifd.currentPkg = strings.TrimSpace(line[len("package "):])
+		ifd.packageName = strings.TrimSpace(line[len("package "):])
 		return
 	}
 
@@ -46,7 +56,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 			if _, ok := ifd.components[compKey]; !ok {
 				ifd.components[compKey] = reportgen.Component{
 					File:    filepath.Join(ifd.dirPath, ifd.fileName),
-					Package: ifd.currentPkg,
+					Package: ifd.packageName,
 					Name:    interfaceName,
 					Type:    "interface",
 				}
@@ -71,7 +81,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 
 			ifd.components[compKey] = reportgen.Component{
 				File:    filepath.Join(ifd.dirPath, ifd.fileName),
-				Package: ifd.currentPkg,
+				Package: ifd.packageName,
 				Name:    ifd.currentInterface,
 				Type:    "interface",
 				Methods: append(ifd.components[compKey].Methods, method),
@@ -85,19 +95,13 @@ func (ifd *InterfaceFinder) GetComponents() reportgen.ComponentMap {
 	defer ifd.mu.Unlock()
 
 	// Return a copy of the map to avoid race conditions
+	// when the caller iterates over the map
 	compCopy := make(reportgen.ComponentMap)
 	for k, v := range ifd.components {
 		compCopy[k] = v
 	}
 
 	return compCopy
-}
-
-func (ifd *InterfaceFinder) Close() {
-	ifd.mu.Lock()
-	defer ifd.mu.Unlock()
-
-	ifd.currentPkg = ""
 }
 
 func getInterfaceCompKey(dirPath, interfaceName string) string {

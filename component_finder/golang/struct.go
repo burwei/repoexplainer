@@ -13,18 +13,28 @@ import (
 type StructFinder struct {
 	mu            sync.Mutex
 	components    reportgen.ComponentMap
-	currentPkg    string
 	currentStruct string
 	fileName      string
 	dirPath       string
+	packageName   string
 }
 
-func NewStructFinder(dirPath, fileName string) *StructFinder {
+func NewStructFinder() *StructFinder {
 	return &StructFinder{
 		components: reportgen.ComponentMap{},
-		dirPath:    dirPath,
-		fileName:   fileName,
 	}
+}
+
+// SetFile sets the directory path and file name for the current file being processed.
+// It's the beginning of a new file.
+func (sf *StructFinder) SetFile(dirPath, fileName string) {
+	sf.mu.Lock()
+	defer sf.mu.Unlock()
+
+	sf.dirPath = dirPath
+	sf.fileName = fileName
+	sf.packageName = ""
+	sf.currentStruct = ""
 }
 
 func (sf *StructFinder) FindComponent(line string) {
@@ -32,7 +42,7 @@ func (sf *StructFinder) FindComponent(line string) {
 	defer sf.mu.Unlock()
 
 	if strings.HasPrefix(line, "package ") {
-		sf.currentPkg = strings.TrimSpace(line[len("package "):])
+		sf.packageName = strings.TrimSpace(line[len("package "):])
 		return
 	}
 
@@ -47,7 +57,7 @@ func (sf *StructFinder) FindComponent(line string) {
 			if _, ok := sf.components[compKey]; !ok {
 				sf.components[compKey] = reportgen.Component{
 					File:    filepath.Join(sf.dirPath, sf.fileName),
-					Package: sf.currentPkg,
+					Package: sf.packageName,
 					Name:    structName,
 					Type:    "struct",
 				}
@@ -72,7 +82,7 @@ func (sf *StructFinder) FindComponent(line string) {
 
 			sf.components[compKey] = reportgen.Component{
 				File:    filepath.Join(sf.dirPath, sf.fileName),
-				Package: sf.currentPkg,
+				Package: sf.packageName,
 				Name:    sf.currentStruct,
 				Type:    "struct",
 				Fields:  append(sf.components[compKey].Fields, field),
@@ -87,19 +97,13 @@ func (sf *StructFinder) GetComponents() reportgen.ComponentMap {
 	defer sf.mu.Unlock()
 
 	// Return a copy of the map to avoid race conditions
+	// when the caller iterates over the map
 	compCopy := make(reportgen.ComponentMap)
 	for k, v := range sf.components {
 		compCopy[k] = v
 	}
 
 	return compCopy
-}
-
-func (sf *StructFinder) FileEnd() {
-	sf.mu.Lock()
-	defer sf.mu.Unlock()
-
-	sf.currentPkg = ""
 }
 
 func getStructCompKey(dirPath, structName string) string {

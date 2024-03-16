@@ -95,15 +95,14 @@ func SecondFunc() int {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			ff := NewFuncFinder(tc.dirPath, tc.fileName)
+			ff := NewFuncFinder()
+			ff.SetFile(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
 			for _, line := range lines {
 				ff.FindComponent(line)
 			}
-
-			ff.FileEnd()
 
 			components := ff.GetComponents()
 

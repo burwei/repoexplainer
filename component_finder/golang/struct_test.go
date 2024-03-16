@@ -149,15 +149,14 @@ type User struct {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			sf := NewStructFinder(tc.dirPath, tc.fileName)
+			sf := NewStructFinder()
+			sf.SetFile(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
 			for _, line := range lines {
 				sf.FindComponent(line)
 			}
-			// Finalize parsing by calling Close
-			sf.FileEnd()
 
 			components := sf.GetComponents()
 

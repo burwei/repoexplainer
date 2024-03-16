@@ -130,15 +130,14 @@ type UserInterface interface {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			ifd := NewInterfaceFinder(tc.dirPath, tc.fileName)
+			ifd := NewInterfaceFinder()
+			ifd.SetFile(tc.dirPath, tc.fileName)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")
 			for _, line := range lines {
 				ifd.FindComponent(line)
 			}
-			// Finalize parsing by calling Close
-			ifd.Close()
 
 			components := ifd.GetComponents()
 

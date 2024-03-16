@@ -12,10 +12,7 @@ type FinderFactory struct {
 
 // GetFinders creates instances of ComponentFinders and returns them.
 func (ff *FinderFactory) GetFinders(dirPath, fileName string) []reportgen.ComponentFinder {
-	// golang
-	structFinder := golang.NewStructFinder(dirPath, fileName)
-	interfaceFinder := golang.NewInterfaceFinder(dirPath, fileName)
-	funcFinder := golang.NewFuncFinder(dirPath, fileName)
+	golangFinder := golang.NewComponentFinder()
 
-	return []reportgen.ComponentFinder{structFinder, interfaceFinder, funcFinder}
+	return []reportgen.ComponentFinder{golangFinder}
 }
