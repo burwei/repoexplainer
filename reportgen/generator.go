@@ -10,14 +10,16 @@ import (
 )
 
 type ReportGenerator struct {
-	repoName      string
+	rootDirName   string
+	rootPath      string
 	fileTraverser *FileTraverser
 	finderFactory FinderFactory
 }
 
-func NewReportGenerator(repoName, rootPath string, finderFactory FinderFactory) *ReportGenerator {
+func NewReportGenerator(rootDirName, rootPath string, finderFactory FinderFactory) *ReportGenerator {
 	return &ReportGenerator{
-		repoName:      repoName,
+		rootDirName:   rootDirName,
+		rootPath:      rootPath,
 		fileTraverser: NewFileTraverser(rootPath),
 		finderFactory: finderFactory,
 	}
@@ -34,17 +36,10 @@ func (rg *ReportGenerator) GenerateReport(out io.Writer) error {
 		return fmt.Errorf("finding code structures in files: %s", err)
 	}
 
-	outputCompMap := OutputComponentMap{}
-	for _, finder := range rg.finderFactory.GetFinders() {
-		compMap := finder.GetComponents()
-		for key, comp := range compMap {
-			dirPath := strings.Split(key, ":")[0]
-			outputCompMap[dirPath] = append(outputCompMap[dirPath], comp)
-		}
-	}
+	outputCompMap := rg.getOutputCompMap()
 
 	writer := bufio.NewWriter(out)
-	writer.WriteString(fmt.Sprintf("# %s\n\n", rg.repoName))
+	writer.WriteString(fmt.Sprintf("# %s\n\n", rg.rootDirName))
 	writer.WriteString("## directory structure\n\n")
 	writer.WriteString(dirStructure)
 	writer.WriteString("\n\n## components\n")
@@ -102,4 +97,25 @@ func (rg *ReportGenerator) findCodeStructuresInFiles() error {
 	}
 
 	return nil
+}
+
+func (rg *ReportGenerator) getOutputCompMap() OutputComponentMap {
+	outputCompMap := OutputComponentMap{}
+	for _, finder := range rg.finderFactory.GetFinders() {
+		compMap := finder.GetComponents()
+		for key, comp := range compMap {
+			dirPath := strings.Split(key, ":")[0]
+			dirPath = strings.TrimPrefix(dirPath, rg.rootPath)
+
+			if strings.Contains(dirPath, "/") {
+				dirPath = "/" + rg.rootDirName + dirPath
+			} else {
+				dirPath = "/" + rg.rootDirName + "/" + dirPath
+			}
+
+			outputCompMap[dirPath] = append(outputCompMap[dirPath], comp)
+		}
+	}
+
+	return outputCompMap
 }

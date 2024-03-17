@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -30,7 +29,7 @@ type SimpleStruct struct {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"simple:SimpleStruct": reportgen.Component{
-					File:    filepath.Join("simple", "simple.go"),
+					File:    "simple.go",
 					Package: "simple",
 					Name:    "SimpleStruct",
 					Type:    "struct",
@@ -55,7 +54,7 @@ func (s *StructWithMethods) GetName() string {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"methods:StructWithMethods": reportgen.Component{
-					File:    filepath.Join("methods", "methods.go"),
+					File:    "methods.go",
 					Package: "methods",
 					Name:    "StructWithMethods",
 					Type:    "struct",
@@ -85,14 +84,14 @@ func (s *Struct) GetName() string {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"implementation:Interface": reportgen.Component{
-					File:    filepath.Join("implementation", "implementation.go"),
+					File:    "implementation.go",
 					Package: "implementation",
 					Name:    "Interface",
 					Type:    "interface",
 					Methods: []string{"GetName() string"},
 				},
 				"implementation:Struct": reportgen.Component{
-					File:    filepath.Join("implementation", "implementation.go"),
+					File:    "implementation.go",
 					Package: "implementation",
 					Name:    "Struct",
 					Type:    "struct",
@@ -126,14 +125,14 @@ func Add(a, b int) int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"allthree:Interface": reportgen.Component{
-					File:    filepath.Join("allthree", "allthree.go"),
+					File:    "allthree.go",
 					Package: "allthree",
 					Name:    "Interface",
 					Type:    "interface",
 					Methods: []string{"GetName() string"},
 				},
 				"allthree:Struct": reportgen.Component{
-					File:    filepath.Join("allthree", "allthree.go"),
+					File:    "allthree.go",
 					Package: "allthree",
 					Name:    "Struct",
 					Type:    "struct",
@@ -141,7 +140,7 @@ func Add(a, b int) int {
 					Methods: []string{"GetName() string"},
 				},
 				"allthree:Add": reportgen.Component{
-					File:    filepath.Join("allthree", "allthree.go"),
+					File:    "allthree.go",
 					Package: "allthree",
 					Name:    "Add(a, b int) int",
 					Type:    "func",

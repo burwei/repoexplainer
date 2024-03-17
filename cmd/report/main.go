@@ -17,10 +17,10 @@ func main() {
 	}
 
 	// Use the base name of the current directory as the repo name
-	repoName := filepath.Base(cwd)
+	rootDirName := filepath.Base(cwd)
 
 	// Create a new report generator
-	rg := reportgen.NewReportGenerator(repoName, cwd, compfinder.NewFinderFactory())
+	rg := reportgen.NewReportGenerator(rootDirName, cwd, compfinder.NewFinderFactory())
 
 	// Create a new file in the current directory
 	file, err := os.Create(filepath.Join(cwd, "repoexplainer.md"))
