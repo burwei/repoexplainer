@@ -4,6 +4,7 @@ package reportgen
 // This could be a struct, interface, function, etc., within a Go file.
 type Component struct {
 	File    string   `json:"file"`    // Path to the file where the component is defined
+	Dir     string   `json:"dir"`     // Directory path where the file is located
 	Package string   `json:"package"` // Package name where the component is defined
 	Name    string   `json:"name"`    // Name of the struct
 	Type    string   `json:"type"`    // Component type (e.g., "struct", "interface", "function")

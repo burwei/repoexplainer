@@ -53,6 +53,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 			// So, we don't need to handle duplicate function definitions
 			ff.components[compKey] = reportgen.Component{
 				File:    ff.fileName,
+				Dir:     ff.dirPath,
 				Package: ff.packageName,
 				Name:    funcSignature,
 				Type:    "func",
@@ -78,9 +79,9 @@ func (ff *FuncFinder) GetComponents() reportgen.ComponentMap {
 func (ff *FuncFinder) ConvertFuncCompKey(compKey string) (string, string) {
 	parts := strings.Split(compKey, ":")
 	comp := ff.components[compKey]
-	structCompKey := filepath.Dir(comp.File) + ":" + parts[0]
+	structCompKey := filepath.Dir(comp.Dir) + ":" + parts[0]
 	funcName := strings.Split(comp.Name, "(")[0]
-	dirPathBasedCompKey := filepath.Dir(comp.File) + ":" + funcName
+	dirPathBasedCompKey := filepath.Dir(comp.Dir) + ":" + funcName
 
 	// receiver part of the compKey is empty
 	if parts[0] == "" {
