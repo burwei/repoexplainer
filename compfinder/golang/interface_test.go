@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -29,7 +28,7 @@ type EmptyInterface interface {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"empty:EmptyInterface": reportgen.Component{
-					File:    filepath.Join("empty", "empty.go"),
+					File:    "empty.go",
 					Package: "empty",
 					Name:    "EmptyInterface",
 					Type:    "interface",
@@ -50,7 +49,7 @@ type ComplexInterface interface {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"complex:ComplexInterface": reportgen.Component{
-					File:    filepath.Join("complex", "complex.go"),
+					File:    "complex.go",
 					Package: "complex",
 					Name:    "ComplexInterface",
 					Type:    "interface",
@@ -75,14 +74,14 @@ type SecondInterface interface {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"multi:FirstInterface": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "FirstInterface",
 					Type:    "interface",
 					Methods: []string{"GetFirstField() string"},
 				},
 				"multi:SecondInterface": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "SecondInterface",
 					Type:    "interface",
@@ -111,14 +110,14 @@ type UserInterface interface {
 		`,
 			expectedComp: reportgen.ComponentMap{
 				"models:BaseInterface": reportgen.Component{
-					File:    filepath.Join("models", "models.go"),
+					File:    "models.go",
 					Package: "models",
 					Name:    "BaseInterface",
 					Type:    "interface",
 					Methods: []string{"GetID() string", "GetCreatedAt() time.Time", "GetUpdatedAt() time.Time"},
 				},
 				"models:UserInterface": reportgen.Component{
-					File:    filepath.Join("models", "models.go"),
+					File:    "models.go",
 					Package: "models",
 					Name:    "UserInterface",
 					Type:    "interface",

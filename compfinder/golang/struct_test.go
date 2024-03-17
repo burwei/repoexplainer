@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -30,7 +29,7 @@ type SimpleStruct struct {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"simple:SimpleStruct": reportgen.Component{
-					File:    filepath.Join("simple", "simple.go"),
+					File:    "simple.go",
 					Package: "simple",
 					Name:    "SimpleStruct",
 					Type:    "struct",
@@ -60,7 +59,7 @@ func (cs *ComplexStruct) GetValue() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"complex:ComplexStruct": reportgen.Component{
-					File:    filepath.Join("complex", "complex.go"),
+					File:    "complex.go",
 					Package: "complex",
 					Name:    "ComplexStruct",
 					Type:    "struct",
@@ -93,14 +92,14 @@ func (ss *SecondStruct) GetSecondField() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"multi:FirstStruct": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "FirstStruct",
 					Type:    "struct",
 					Fields:  []string{"FirstField string"},
 				},
 				"multi:SecondStruct": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "SecondStruct",
 					Type:    "struct",
@@ -130,14 +129,14 @@ type User struct {
 			expectedComp: reportgen.ComponentMap{
 				"models:BaseModel": reportgen.Component{
 
-					File:    filepath.Join("models", "models.go"),
+					File:    "models.go",
 					Package: "models",
 					Name:    "BaseModel",
 					Type:    "struct",
 					Fields:  []string{"ID string", "CreatedAt time.Time", "UpdatedAt time.Time"},
 				},
 				"models:User": reportgen.Component{
-					File:    filepath.Join("models", "models.go"),
+					File:    "models.go",
 					Package: "models",
 					Name:    "User",
 					Type:    "struct",

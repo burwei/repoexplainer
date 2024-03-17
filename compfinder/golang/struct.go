@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"sync"
 
@@ -56,7 +55,7 @@ func (sf *StructFinder) FindComponent(line string) {
 			// So, we can ignore the duplicate struct definition
 			if _, ok := sf.components[compKey]; !ok {
 				sf.components[compKey] = reportgen.Component{
-					File:    filepath.Join(sf.dirPath, sf.fileName),
+					File:    sf.fileName,
 					Package: sf.packageName,
 					Name:    structName,
 					Type:    "struct",
@@ -78,10 +77,14 @@ func (sf *StructFinder) FindComponent(line string) {
 
 			// get the field definition
 			field := strings.Join(parts, " ")
+			if field == "" {
+				return
+			}
+
 			compKey := getStructCompKey(sf.dirPath, sf.currentStruct)
 
 			sf.components[compKey] = reportgen.Component{
-				File:    filepath.Join(sf.dirPath, sf.fileName),
+				File:    sf.fileName,
 				Package: sf.packageName,
 				Name:    sf.currentStruct,
 				Type:    "struct",

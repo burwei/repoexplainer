@@ -34,23 +34,24 @@ func (rg *ReportGenerator) GenerateReport(out io.Writer) error {
 		return fmt.Errorf("finding code structures in files: %s", err)
 	}
 
-	compMaps := []ComponentMap{}
+	outputCompMap := OutputComponentMap{}
 	for _, finder := range rg.finderFactory.GetFinders() {
 		compMap := finder.GetComponents()
-		compMaps = append(compMaps, compMap)
+		for key, comp := range compMap {
+			dirPath := strings.Split(key, ":")[0]
+			outputCompMap[dirPath] = append(outputCompMap[dirPath], comp)
+		}
 	}
 
 	writer := bufio.NewWriter(out)
-
 	writer.WriteString(fmt.Sprintf("# %s\n\n", rg.repoName))
 	writer.WriteString("## directory structure\n\n")
 	writer.WriteString(dirStructure)
 	writer.WriteString("\n\n## components\n")
 
-	for _, compMap := range compMaps {
-		for dirPathBasedCompKey, comp := range compMap {
-			dirPath := strings.Split(dirPathBasedCompKey, ":")[0]
-			writer.WriteString(fmt.Sprintf(" - dir: %s\n", dirPath))
+	for dirPath, comps := range outputCompMap {
+		writer.WriteString(fmt.Sprintf(" - dir: %s\n", dirPath))
+		for _, comp := range comps {
 			writer.WriteString(fmt.Sprintf("     - %s\n", comp.Name))
 			writer.WriteString(fmt.Sprintf("         - file: %s\n", comp.File))
 			writer.WriteString(fmt.Sprintf("         - package: %s\n", comp.Package))
@@ -79,11 +80,9 @@ func (rg *ReportGenerator) findCodeStructuresInFiles() error {
 		}
 		defer file.Close()
 
-		fmt.Printf("Processing file: %s\n", file.Name())
-
 		// Set the file for all the finders
 		for _, finder := range rg.finderFactory.GetFinders() {
-			finder.SetFile(filepath.Dir(filePath), file.Name())
+			finder.SetFile(filepath.Dir(filePath), filepath.Base(filePath))
 		}
 
 		// Loop through all the lines in the file

@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -30,7 +29,7 @@ func SimpleFunc() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				":SimpleFunc": reportgen.Component{
-					File:    filepath.Join("simple", "simple.go"),
+					File:    "simple.go",
 					Package: "simple",
 					Name:    "SimpleFunc() int",
 					Type:    "func",
@@ -54,7 +53,7 @@ func (cs *ComplexStruct) GetValue() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"ComplexStruct:GetValue": reportgen.Component{
-					File:    filepath.Join("complex", "complex.go"),
+					File:    "complex.go",
 					Package: "complex",
 					Name:    "GetValue() int",
 					Type:    "func",
@@ -78,13 +77,13 @@ func SecondFunc() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				":FirstFunc": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "FirstFunc() string",
 					Type:    "func",
 				},
 				":SecondFunc": reportgen.Component{
-					File:    filepath.Join("multi", "multi.go"),
+					File:    "multi.go",
 					Package: "multi",
 					Name:    "SecondFunc() int",
 					Type:    "func",

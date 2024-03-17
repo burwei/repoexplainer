@@ -15,3 +15,8 @@ type Component struct {
 // The key is a combination of the directory path and the component name.
 // Key format: "path/to/dir:ComponentName"
 type ComponentMap map[string]Component
+
+// OutputComponentMap maps a directory path to a slice of Components contained within.
+// The key is the directory path.
+// Key format: "path/to/dir"
+type OutputComponentMap map[string][]Component

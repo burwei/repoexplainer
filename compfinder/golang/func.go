@@ -52,7 +52,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 			// In Go, there can't be multiple functions with the same name with same receiver type
 			// So, we don't need to handle duplicate function definitions
 			ff.components[compKey] = reportgen.Component{
-				File:    filepath.Join(ff.dirPath, ff.fileName),
+				File:    ff.fileName,
 				Package: ff.packageName,
 				Name:    funcSignature,
 				Type:    "func",

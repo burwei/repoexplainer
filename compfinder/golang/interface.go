@@ -1,7 +1,6 @@
 package golang
 
 import (
-	"path/filepath"
 	"strings"
 	"sync"
 
@@ -55,7 +54,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 			// So, we can ignore the duplicate interface definition
 			if _, ok := ifd.components[compKey]; !ok {
 				ifd.components[compKey] = reportgen.Component{
-					File:    filepath.Join(ifd.dirPath, ifd.fileName),
+					File:    ifd.fileName,
 					Package: ifd.packageName,
 					Name:    interfaceName,
 					Type:    "interface",
@@ -77,10 +76,14 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 
 			// get the method definition
 			method := strings.Join(parts, " ")
+			if method == "" {
+				return
+			}
+
 			compKey := getInterfaceCompKey(ifd.dirPath, ifd.currentInterface)
 
 			ifd.components[compKey] = reportgen.Component{
-				File:    filepath.Join(ifd.dirPath, ifd.fileName),
+				File:    ifd.fileName,
 				Package: ifd.packageName,
 				Name:    ifd.currentInterface,
 				Type:    "interface",
