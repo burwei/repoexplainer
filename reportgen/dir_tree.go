@@ -32,20 +32,30 @@ func (ft *FileTraverser) populateFiles() {
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() {
+
+		if d.IsDir() {
+			if strings.HasPrefix(d.Name(), ".") {
+				return fs.SkipDir // Skip hidden directories
+			}
+		} else {
+			if strings.HasPrefix(d.Name(), ".") {
+				return nil // Skip hidden files
+			}
+
 			ft.Files = append(ft.Files, path)
 		}
+
 		return nil
 	})
 }
 
-// NextFile returns the next file in the traversal. When there are no more files, it returns an empty string.
-func (ft *FileTraverser) NextFile() string {
+// NextFile returns the next file in the traversal. When there are no more files, it returns false.
+func (ft *FileTraverser) NextFile() (string, bool) {
 	ft.currentFile++
 	if ft.currentFile >= len(ft.Files) {
-		return "" // Indicates no more files are available
+		return "", false // Indicates no more files are available
 	}
-	return ft.Files[ft.currentFile]
+	return ft.Files[ft.currentFile], true
 }
 
 // PrintDirectoryStructure prints the directory structure to the console.

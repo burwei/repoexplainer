@@ -113,8 +113,8 @@ func TestNextFile(t *testing.T) {
 
 			var foundFiles []string
 			for {
-				file := ft.NextFile()
-				if file == "" {
+				file, ok := ft.NextFile()
+				if !ok {
 					break
 				}
 				// We compare only the base names since the order should follow the slice population

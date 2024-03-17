@@ -1,11 +1,15 @@
 package reportgen
 
 // ComponentFinder is an interface for finding definitions of components like interfaces,
-// structs, functions, etc., within Go files. It analyzes lines of code and identifies
+// structs, functions, etc., within files. It analyzes lines of code and identifies
 // components based on the provided definitions.
 type ComponentFinder interface {
+	// SetFile sets the directory path and file name for the current file being processed.
+	// It's the beginning of a new file.
+	SetFile(dirPath, fileName string)
+
 	// FindComponent takes a line of code as input and determines if it defines a component.
-	// The input lines are continuous from the same file until EOF is reached.
+	// The input lines are continuous within a single file.
 	// This method is responsible for parsing the code and extracting component definitions.
 	FindComponent(line string)
 
@@ -13,4 +17,9 @@ type ComponentFinder interface {
 	// This method allows retrieval of all identified components after processing
 	// a file or a set of continuous lines of code, organized by their directory path.
 	GetComponents() ComponentMap
+}
+
+// FinderFactory is an interface for creating ComponentFinder instances.
+type FinderFactory interface {
+	GetFinders() []ComponentFinder
 }

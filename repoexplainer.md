@@ -1,0 +1,532 @@
+# repoexplainer
+
+## directory structure
+
+/repoexplainer
+  - README.md
+  - go.mod
+  - go.sum
+  - repoexplainer.md
+  /report
+    - main.go
+/compfinder
+  - finder_factory.go
+  /golang
+    - func.go
+    - func_test.go
+    - interface.go
+    - interface_test.go
+    - struct.go
+    - struct_test.go
+    - total.go
+    - total_test.go
+/reportgen
+  - dir_tree.go
+  - dir_tree_test.go
+  - generator.go
+  - interface.go
+  - model.go
+
+
+## components
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - FuncFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: struct
+         - fields:
+             - mu sync.Mutex
+             - components reportgen.ComponentMap
+             - fileName string
+             - dirPath string
+             - packageName string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - InterfaceFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
+         - package: golang
+         - type: struct
+         - fields:
+             - mu sync.Mutex
+             - components reportgen.ComponentMap
+             - currentInterface string
+             - fileName string
+             - dirPath string
+             - packageName string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SecondFunc() int
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+         - package: multi
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - FirstFunc() string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+         - package: multi
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - getInterfaceCompKey(dirPath, interfaceName string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - Struct
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: allthree
+         - type: struct
+         - fields:
+             - Name string
+             - Name string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - EmptyInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: empty
+         - type: interface
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - PrintDirectoryStructure() (string, error)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - TestComponentFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - ReportGenerator
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - repoName string
+             - fileTraverser *FileTraverser
+             - finderFactory FinderFactory
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer
+     - Component
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/Users/burwei/Documents/github/repoexplainer/repoexplainer/README.md
+         - package: 
+         - type: struct
+         - fields:
+             - File string `json:"file"`
+             - Package string `json:"package"`
+             - Type string `json:"type"`
+             - Fields []string `json:"fields"`
+             - Methods []string `json:"methods"`
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - FileTraverser
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - RootPath string
+             - Files []string
+             - currentFile int
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - FinderFactory
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/interface.go
+         - package: reportgen
+         - type: interface
+         - fields:
+         - methods:
+             - GetFinders() []ComponentFinder
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - ComplexInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: complex
+         - type: interface
+         - fields:
+         - methods:
+             - GetName() string
+             - GetValue() int
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - GetSecondField() int
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: multi
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - StructWithMethods
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: methods
+         - type: struct
+         - fields:
+             - Name string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - extractFuncSignature(line string) (string, string)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SimpleStruct
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: simple
+         - type: struct
+         - fields:
+             - ID int
+             - ID int
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - NewReportGenerator(repoName, rootPath string, finderFactory FinderFactory) *ReportGenerator
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SetFile(dirPath, fileName string)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - NewFuncFinder() *FuncFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - TestPrintDirectoryStructure(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - GetComponents() reportgen.ComponentMap
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - populateFiles()
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SimpleFunc() int
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+         - package: simple
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
+         - package: golang
+         - type: struct
+         - fields:
+             - structFinder *StructFinder
+             - interfaceFinder *InterfaceFinder
+             - funcFinder *FuncFinder
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - BaseModel
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: models
+         - type: struct
+         - fields:
+             - ID string
+             - CreatedAt time.Time
+             - UpdatedAt time.Time
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - GenerateReport(out io.Writer) error
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - TestFuncFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - ComplexStruct
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: complex
+         - type: struct
+         - fields:
+             - Value int
+             - Name string
+             - Value int
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/interface.go
+         - package: reportgen
+         - type: interface
+         - fields:
+         - methods:
+             - 
+             - 
+             - SetFile(dirPath, fileName string)
+             - 
+             - 
+             - 
+             - 
+             - FindComponent(line string)
+             - 
+             - 
+             - 
+             - 
+             - GetComponents() ComponentMap
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - TestPopulateFiles(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - StructFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: struct
+         - fields:
+             - mu sync.Mutex
+             - components reportgen.ComponentMap
+             - currentStruct string
+             - fileName string
+             - dirPath string
+             - packageName string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SecondStruct
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: multi
+         - type: struct
+         - fields:
+             - SecondField int
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - FirstInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: multi
+         - type: interface
+         - fields:
+         - methods:
+             - GetFirstField() string
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - getStructCompKey(dirPath, structName string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder
+     - GetFinders() []reportgen.ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
+         - package: compfinder
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - GetValue() int
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: complex
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - UserInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: models
+         - type: interface
+         - fields:
+         - methods:
+             - BaseInterface
+             - GetUsername() string
+             - GetEmail() string
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - GetName() string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: allthree
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - extractInterfaceName(line string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder
+     - FinderFactory
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
+         - package: compfinder
+         - type: struct
+         - fields:
+             - Finders []reportgen.ComponentFinder
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - BaseInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: models
+         - type: interface
+         - fields:
+         - methods:
+             - GetID() string
+             - GetCreatedAt() time.Time
+             - GetUpdatedAt() time.Time
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - NextFile() (string, bool)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - getFuncCompKey(receiver, funcSignature string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - NewInterfaceFinder() *InterfaceFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - findCodeStructuresInFiles() error
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/report/Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/report
+     - main()
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/report/Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/report/main.go
+         - package: main
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - NewFileTraverser(rootPath string) *FileTraverser
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - GetFirstField() string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: multi
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - User
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: models
+         - type: struct
+         - fields:
+             - BaseModel
+             - Username string
+             - Email string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - SecondInterface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
+         - package: multi
+         - type: interface
+         - fields:
+         - methods:
+             - GetSecondField() int
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - TestStructFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder
+     - NewFinderFactory() *FinderFactory
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
+         - package: compfinder
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - extractStructName(line string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - FirstStruct
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: multi
+         - type: struct
+         - fields:
+             - FirstField string
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen
+     - Component
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/model.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - File string `json:"file"`
+             - Package string `json:"package"`
+             - Name string `json:"name"`
+             - Type string `json:"type"`
+             - Fields []string `json:"fields"`
+             - Methods []string `json:"methods"`
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - Interface
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total_test.go
+         - package: allthree
+         - type: interface
+         - fields:
+         - methods:
+             - GetName() string
+             - GetName() string
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - FindComponent(line string)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang
+     - NewComponentFinder() *ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+ - dir: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfind

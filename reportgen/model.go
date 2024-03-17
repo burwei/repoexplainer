@@ -12,5 +12,6 @@ type Component struct {
 }
 
 // ComponentMap maps a directory path to a slice of Components contained within.
-// The key is constructed from the last two directory names (e.g., "/internal/repo").
+// The key is a combination of the directory path and the component name.
+// Key format: "path/to/dir:ComponentName"
 type ComponentMap map[string]Component
