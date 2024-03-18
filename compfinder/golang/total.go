@@ -33,6 +33,12 @@ func (cf *ComponentFinder) SetFile(filePath string) {
 }
 
 func (cf *ComponentFinder) FindComponent(line string) {
+	// remove inline comments if any
+	line = strings.Split(line, "//")[0]
+	if line == "" {
+		return
+	}
+
 	cf.checkMultilineCommentOrString(line)
 	if cf.inMultiLineComment != 0 || cf.inMultiLineString {
 		return

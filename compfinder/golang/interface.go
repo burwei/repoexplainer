@@ -62,8 +62,6 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 		}
 	} else {
 		if ifd.currentInterface != "" {
-			// remove inline comments if any
-			line = strings.Split(line, "//")[0]
 			parts := strings.Fields(line)
 
 			// close the interface definition if the line contains only "}"

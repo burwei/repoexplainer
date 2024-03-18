@@ -63,8 +63,6 @@ func (sf *StructFinder) FindComponent(line string) {
 		}
 	} else {
 		if sf.currentStruct != "" {
-			// remove inline comments if any
-			line = strings.Split(line, "//")[0]
 			parts := strings.Fields(line)
 
 			// close the struct definition if the line contains only "}"
