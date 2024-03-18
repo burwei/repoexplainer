@@ -147,7 +147,7 @@ func TestPrintDirectoryStructure(t *testing.T) {
 				os.WriteFile(filepath.Join(rootDir, "file1.txt"), []byte("content"), 0644)
 				os.WriteFile(filepath.Join(rootDir, "file2.txt"), []byte("content"), 0644)
 			},
-			expectedOutput: "/001\n  - file1.txt\n  - file2.txt\n",
+			expectedOutput: "/001\n\t- file1.txt\n\t- file2.txt\n",
 		},
 		{
 			name: "Nested directories with files",
@@ -161,7 +161,7 @@ func TestPrintDirectoryStructure(t *testing.T) {
 				os.Mkdir(deeperNestedDir, 0755)
 				os.WriteFile(filepath.Join(deeperNestedDir, "nested_file2.txt"), []byte("content"), 0644)
 			},
-			expectedOutput: "/001\n/dir1\n  - nested_file1.txt\n  /dir2\n    - nested_file2.txt\n",
+			expectedOutput: "/001\t\n/dir1\n\t\t- nested_file1.txt\n\t\t/dir2\n\t\t\t- nested_file2.txt\n",
 		},
 	}
 
