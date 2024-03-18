@@ -9,12 +9,18 @@ import (
 	"strings"
 )
 
+type PrintableFiles struct {
+	Type string
+	Path string
+}
+
 // FileTraverser traverses the files in a directory tree starting from a root directory.
 type FileTraverser struct {
-	RootPath    string              // RootPath is the starting point for the traversal
-	Files       []string            // Files stores the paths of files found during traversal
-	existsFiles map[string]struct{} // existsFiles is a set of file paths to check for existence
-	currentFile int                 // currentFile tracks the current index in the Files slice
+	RootPath       string              // RootPath is the starting point for the traversal
+	Files          []string            // Files stores the paths of files found during traversal
+	printableFiles []PrintableFiles    // PrintableFiles stores the paths of files found during traversal
+	existsFiles    map[string]struct{} // existsFiles is a set of file paths to check for existence
+	currentFile    int                 // currentFile tracks the current index in the Files slice
 }
 
 // NewFileTraverser creates a new FileTraverser for a given root directory.
@@ -40,12 +46,19 @@ func (ft *FileTraverser) populateFiles() {
 				return fs.SkipDir // Skip hidden directories
 			}
 
+			if _, ok := ft.existsFiles[path]; !ok {
+				if path != ft.RootPath {
+					ft.printableFiles = append(ft.printableFiles, PrintableFiles{Type: "dir", Path: path})
+					ft.existsFiles[path] = struct{}{}
+				}
+			}
 		} else {
 			if strings.HasPrefix(d.Name(), ".") {
 				return nil // Skip hidden files
 			}
 
 			ft.Files = append(ft.Files, path)
+			ft.printableFiles = append(ft.printableFiles, PrintableFiles{Type: "file", Path: path})
 			ft.existsFiles[path] = struct{}{}
 		}
 
@@ -69,19 +82,15 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 	}
 
 	// Initialize directory structure map with root directory
-	dirStructure := map[string][]string{
+	dirStructure := map[string][]PrintableFiles{
 		".": {}, // Represent root directory with a dot, consistent with Unix-like filesystem notation
 	}
 
 	// Fill the directory structure map with files, organized by their directory paths
-	for _, file := range ft.Files {
-		// relPath, err := filepath.Rel(ft.RootPath, file)
-		// if err != nil {
-		// 	return "", err
-		// }
-		dir := filepath.Dir(file)
-		base := filepath.Base(file)
-		dirStructure[dir] = append(dirStructure[dir], base)
+	for _, file := range ft.printableFiles {
+		dir := filepath.Dir(file.Path)
+		base := filepath.Base(file.Path)
+		dirStructure[dir] = append(dirStructure[dir], PrintableFiles{Type: file.Type, Path: base})
 	}
 
 	// Build the directory tree string
@@ -96,7 +105,7 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 	offset := strings.Count(ft.RootPath, string(os.PathSeparator))
 	for _, dir := range dirs {
 		files := dirStructure[dir]
-		sort.Strings(files) // Sort files for consistent order
+		// sort.Strings(files) // Sort files for consistent order
 
 		if dir != "." { // Skip the root directory since it's already added
 			depth := strings.Count(dir, string(os.PathSeparator)) - offset
@@ -105,9 +114,13 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 		}
 
 		for _, file := range files {
+			if file.Type == "dir" {
+				continue
+			}
+
 			depth := strings.Count(dir, string(os.PathSeparator)) - offset + 1
 			indent := strings.Repeat("\t", depth)
-			builder.WriteString(fmt.Sprintf("%s- %s\n", indent, file))
+			builder.WriteString(fmt.Sprintf("%s- %s\n", indent, file.Path))
 		}
 	}
 
