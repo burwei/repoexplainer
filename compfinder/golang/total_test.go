@@ -11,15 +11,13 @@ import (
 func TestComponentFinderFindComponent(t *testing.T) {
 	testCases := []struct {
 		name         string
-		dirPath      string
-		fileName     string
+		filePath     string
 		fileContent  string
 		expectedComp reportgen.ComponentMap
 	}{
 		{
 			name:     "Simple struct without methods",
-			dirPath:  "simple",
-			fileName: "simple.go",
+			filePath: "simple/simple.go",
 			fileContent: `
 package simple
 
@@ -29,7 +27,7 @@ type SimpleStruct struct {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"simple:SimpleStruct": reportgen.Component{
-					File:    "simple.go",
+					File:    "simple/simple.go",
 					Package: "simple",
 					Name:    "SimpleStruct",
 					Type:    "struct",
@@ -39,8 +37,7 @@ type SimpleStruct struct {
 		},
 		{
 			name:     "Struct with methods",
-			dirPath:  "methods",
-			fileName: "methods.go",
+			filePath: "methods/methods.go",
 			fileContent: `
 package methods
 
@@ -54,7 +51,7 @@ func (s *StructWithMethods) GetName() string {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"methods:StructWithMethods": reportgen.Component{
-					File:    "methods.go",
+					File:    "methods/methods.go",
 					Package: "methods",
 					Name:    "StructWithMethods",
 					Type:    "struct",
@@ -65,8 +62,7 @@ func (s *StructWithMethods) GetName() string {
 		},
 		{
 			name:     "Struct and Interface",
-			dirPath:  "implementation",
-			fileName: "implementation.go",
+			filePath: "implementation/implementation.go",
 			fileContent: `
 package implementation
 
@@ -84,14 +80,14 @@ func (s *Struct) GetName() string {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"implementation:Interface": reportgen.Component{
-					File:    "implementation.go",
+					File:    "implementation/implementation.go",
 					Package: "implementation",
 					Name:    "Interface",
 					Type:    "interface",
 					Methods: []string{"GetName() string"},
 				},
 				"implementation:Struct": reportgen.Component{
-					File:    "implementation.go",
+					File:    "implementation/implementation.go",
 					Package: "implementation",
 					Name:    "Struct",
 					Type:    "struct",
@@ -102,8 +98,7 @@ func (s *Struct) GetName() string {
 		},
 		{
 			name:     "struct, interface and function",
-			dirPath:  "allthree",
-			fileName: "allthree.go",
+			filePath: "allthree/allthree.go",
 			fileContent: `
 package allthree
 
@@ -125,14 +120,14 @@ func Add(a, b int) int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"allthree:Interface": reportgen.Component{
-					File:    "allthree.go",
+					File:    "allthree/allthree.go",
 					Package: "allthree",
 					Name:    "Interface",
 					Type:    "interface",
 					Methods: []string{"GetName() string"},
 				},
 				"allthree:Struct": reportgen.Component{
-					File:    "allthree.go",
+					File:    "allthree/allthree.go",
 					Package: "allthree",
 					Name:    "Struct",
 					Type:    "struct",
@@ -140,7 +135,7 @@ func Add(a, b int) int {
 					Methods: []string{"GetName() string"},
 				},
 				"allthree:Add": reportgen.Component{
-					File:    "allthree.go",
+					File:    "allthree/allthree.go",
 					Package: "allthree",
 					Name:    "Add(a, b int) int",
 					Type:    "func",
@@ -152,7 +147,7 @@ func Add(a, b int) int {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			cf := NewComponentFinder()
-			cf.SetFile(tc.dirPath, tc.fileName)
+			cf.SetFile(tc.filePath)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")

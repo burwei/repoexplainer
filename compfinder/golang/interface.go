@@ -1,6 +1,7 @@
 package golang
 
 import (
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -12,8 +13,7 @@ type InterfaceFinder struct {
 	mu               sync.Mutex
 	components       reportgen.ComponentMap
 	currentInterface string
-	fileName         string
-	dirPath          string
+	filePath         string
 	packageName      string
 }
 
@@ -25,12 +25,11 @@ func NewInterfaceFinder() *InterfaceFinder {
 
 // SetFile sets the directory path and file name for the current file being processed.
 // It's the beginning of a new file.
-func (ifd *InterfaceFinder) SetFile(dirPath, fileName string) {
+func (ifd *InterfaceFinder) SetFile(filePath string) {
 	ifd.mu.Lock()
 	defer ifd.mu.Unlock()
 
-	ifd.dirPath = dirPath
-	ifd.fileName = fileName
+	ifd.filePath = filePath
 	ifd.packageName = ""
 	ifd.currentInterface = ""
 }
@@ -47,14 +46,14 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 	// Interface definition or method detection logic
 	if strings.Contains(line, "interface {") { // fast check
 		if interfaceName := extractInterfaceName(line); interfaceName != "" { // detailed check
-			compKey := getInterfaceCompKey(ifd.dirPath, interfaceName)
+			compKey := getInterfaceCompKey(ifd.filePath, interfaceName)
 			ifd.currentInterface = interfaceName
 
 			// In Go, there is only one interface with the same name in the same directory
 			// So, we can ignore the duplicate interface definition
 			if _, ok := ifd.components[compKey]; !ok {
 				ifd.components[compKey] = reportgen.Component{
-					File:    ifd.fileName,
+					File:    ifd.filePath,
 					Package: ifd.packageName,
 					Name:    interfaceName,
 					Type:    "interface",
@@ -80,10 +79,10 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 				return
 			}
 
-			compKey := getInterfaceCompKey(ifd.dirPath, ifd.currentInterface)
+			compKey := getInterfaceCompKey(ifd.filePath, ifd.currentInterface)
 
 			ifd.components[compKey] = reportgen.Component{
-				File:    ifd.fileName,
+				File:    ifd.filePath,
 				Package: ifd.packageName,
 				Name:    ifd.currentInterface,
 				Type:    "interface",
@@ -107,8 +106,8 @@ func (ifd *InterfaceFinder) GetComponents() reportgen.ComponentMap {
 	return compCopy
 }
 
-func getInterfaceCompKey(dirPath, interfaceName string) string {
-	return dirPath + ":" + interfaceName
+func getInterfaceCompKey(filePath, interfaceName string) string {
+	return filepath.Dir(filePath) + ":" + interfaceName
 }
 
 // Assumes the interface declaration line follows the pattern "type InterfaceName interface {".

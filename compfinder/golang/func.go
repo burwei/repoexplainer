@@ -12,8 +12,7 @@ import (
 type FuncFinder struct {
 	mu          sync.Mutex
 	components  reportgen.ComponentMap
-	fileName    string
-	dirPath     string
+	filePath    string
 	packageName string
 }
 
@@ -25,12 +24,11 @@ func NewFuncFinder() *FuncFinder {
 
 // SetFile sets the directory path and file name for the current file being processed.
 // It's the beginning of a new file.
-func (ff *FuncFinder) SetFile(dirPath, fileName string) {
+func (ff *FuncFinder) SetFile(filePath string) {
 	ff.mu.Lock()
 	defer ff.mu.Unlock()
 
-	ff.dirPath = dirPath
-	ff.fileName = fileName
+	ff.filePath = filePath
 	ff.packageName = ""
 }
 
@@ -52,8 +50,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 			// In Go, there can't be multiple functions with the same name with same receiver type
 			// So, we don't need to handle duplicate function definitions
 			ff.components[compKey] = reportgen.Component{
-				File:    ff.fileName,
-				Dir:     ff.dirPath,
+				File:    ff.filePath,
 				Package: ff.packageName,
 				Name:    funcSignature,
 				Type:    "func",
@@ -79,9 +76,9 @@ func (ff *FuncFinder) GetComponents() reportgen.ComponentMap {
 func (ff *FuncFinder) ConvertFuncCompKey(compKey string) (string, string) {
 	parts := strings.Split(compKey, ":")
 	comp := ff.components[compKey]
-	structCompKey := filepath.Dir(comp.Dir) + ":" + parts[0]
+	structCompKey := filepath.Dir(comp.File) + ":" + parts[0]
 	funcName := strings.Split(comp.Name, "(")[0]
-	dirPathBasedCompKey := filepath.Dir(comp.Dir) + ":" + funcName
+	dirPathBasedCompKey := filepath.Dir(comp.File) + ":" + funcName
 
 	// receiver part of the compKey is empty
 	if parts[0] == "" {

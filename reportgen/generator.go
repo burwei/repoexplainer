@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -77,7 +76,7 @@ func (rg *ReportGenerator) findCodeStructuresInFiles() error {
 
 		// Set the file for all the finders
 		for _, finder := range rg.finderFactory.GetFinders() {
-			finder.SetFile(filepath.Dir(filePath), filepath.Base(filePath))
+			finder.SetFile(filePath)
 		}
 
 		// Loop through all the lines in the file

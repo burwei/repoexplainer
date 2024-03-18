@@ -11,15 +11,13 @@ import (
 func TestStructFinderFindComponent(t *testing.T) {
 	testCases := []struct {
 		name         string
-		dirPath      string
-		fileName     string
+		filePath     string
 		fileContent  string
 		expectedComp reportgen.ComponentMap
 	}{
 		{
 			name:     "Simple struct without methods",
-			dirPath:  "simple",
-			fileName: "simple.go",
+			filePath: "simple/simple.go",
 			fileContent: `
 package simple
 
@@ -29,7 +27,7 @@ type SimpleStruct struct {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"simple:SimpleStruct": reportgen.Component{
-					File:    "simple.go",
+					File:    "simple/simple.go",
 					Package: "simple",
 					Name:    "SimpleStruct",
 					Type:    "struct",
@@ -39,8 +37,7 @@ type SimpleStruct struct {
 		},
 		{
 			name:     "Struct with multiple fields and methods",
-			dirPath:  "complex",
-			fileName: "complex.go",
+			filePath: "complex/complex.go",
 			fileContent: `
 package complex
 
@@ -59,7 +56,7 @@ func (cs *ComplexStruct) GetValue() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"complex:ComplexStruct": reportgen.Component{
-					File:    "complex.go",
+					File:    "complex/complex.go",
 					Package: "complex",
 					Name:    "ComplexStruct",
 					Type:    "struct",
@@ -69,8 +66,7 @@ func (cs *ComplexStruct) GetValue() int {
 		},
 		{
 			name:     "Multiple structs in a file",
-			dirPath:  "multi",
-			fileName: "multi.go",
+			filePath: "multi/multi.go",
 			fileContent: `
 package multi
 
@@ -92,14 +88,14 @@ func (ss *SecondStruct) GetSecondField() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"multi:FirstStruct": reportgen.Component{
-					File:    "multi.go",
+					File:    "multi/multi.go",
 					Package: "multi",
 					Name:    "FirstStruct",
 					Type:    "struct",
 					Fields:  []string{"FirstField string"},
 				},
 				"multi:SecondStruct": reportgen.Component{
-					File:    "multi.go",
+					File:    "multi/multi.go",
 					Package: "multi",
 					Name:    "SecondStruct",
 					Type:    "struct",
@@ -109,8 +105,7 @@ func (ss *SecondStruct) GetSecondField() int {
 		},
 		{
 			name:     "Data model struct with embedded field",
-			dirPath:  "models",
-			fileName: "models.go",
+			filePath: "models/models.go",
 			fileContent: `
 package models
 
@@ -129,14 +124,14 @@ type User struct {
 			expectedComp: reportgen.ComponentMap{
 				"models:BaseModel": reportgen.Component{
 
-					File:    "models.go",
+					File:    "models/models.go",
 					Package: "models",
 					Name:    "BaseModel",
 					Type:    "struct",
 					Fields:  []string{"ID string", "CreatedAt time.Time", "UpdatedAt time.Time"},
 				},
 				"models:User": reportgen.Component{
-					File:    "models.go",
+					File:    "models/models.go",
 					Package: "models",
 					Name:    "User",
 					Type:    "struct",
@@ -149,7 +144,7 @@ type User struct {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			sf := NewStructFinder()
-			sf.SetFile(tc.dirPath, tc.fileName)
+			sf.SetFile(tc.filePath)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")

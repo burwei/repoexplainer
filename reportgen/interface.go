@@ -4,9 +4,9 @@ package reportgen
 // structs, functions, etc., within files. It analyzes lines of code and identifies
 // components based on the provided definitions.
 type ComponentFinder interface {
-	// SetFile sets the directory path and file name for the current file being processed.
+	// SetFile sets the path of the current file being processed.
 	// It's the beginning of a new file.
-	SetFile(dirPath, fileName string)
+	SetFile(filePath string)
 
 	// FindComponent takes a line of code as input and determines if it defines a component.
 	// The input lines are continuous within a single file.

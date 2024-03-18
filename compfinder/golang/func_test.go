@@ -11,15 +11,13 @@ import (
 func TestFuncFinderFindComponent(t *testing.T) {
 	testCases := []struct {
 		name         string
-		dirPath      string
-		fileName     string
+		filePath     string
 		fileContent  string
 		expectedComp reportgen.ComponentMap
 	}{
 		{
 			name:     "Simple function",
-			dirPath:  "simple",
-			fileName: "simple.go",
+			filePath: "simple/simple.go",
 			fileContent: `
 package simple
 
@@ -29,7 +27,7 @@ func SimpleFunc() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				":SimpleFunc": reportgen.Component{
-					File:    "simple.go",
+					File:    "simple/simple.go",
 					Package: "simple",
 					Name:    "SimpleFunc() int",
 					Type:    "func",
@@ -38,8 +36,7 @@ func SimpleFunc() int {
 		},
 		{
 			name:     "Function with receiver",
-			dirPath:  "complex",
-			fileName: "complex.go",
+			filePath: "complex/complex.go",
 			fileContent: `
 package complex
 
@@ -53,7 +50,7 @@ func (cs *ComplexStruct) GetValue() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				"ComplexStruct:GetValue": reportgen.Component{
-					File:    "complex.go",
+					File:    "complex/complex.go",
 					Package: "complex",
 					Name:    "GetValue() int",
 					Type:    "func",
@@ -62,8 +59,7 @@ func (cs *ComplexStruct) GetValue() int {
 		},
 		{
 			name:     "Multiple functions in a file",
-			dirPath:  "multi",
-			fileName: "multi.go",
+			filePath: "multi/multi.go",
 			fileContent: `
 package multi
 
@@ -77,13 +73,13 @@ func SecondFunc() int {
 `,
 			expectedComp: reportgen.ComponentMap{
 				":FirstFunc": reportgen.Component{
-					File:    "multi.go",
+					File:    "multi/multi.go",
 					Package: "multi",
 					Name:    "FirstFunc() string",
 					Type:    "func",
 				},
 				":SecondFunc": reportgen.Component{
-					File:    "multi.go",
+					File:    "multi/multi.go",
 					Package: "multi",
 					Name:    "SecondFunc() int",
 					Type:    "func",
@@ -95,7 +91,7 @@ func SecondFunc() int {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			ff := NewFuncFinder()
-			ff.SetFile(tc.dirPath, tc.fileName)
+			ff.SetFile(tc.filePath)
 
 			// Simulating line-by-line reading
 			lines := strings.Split(tc.fileContent, "\n")

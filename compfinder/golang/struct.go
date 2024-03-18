@@ -1,6 +1,7 @@
 package golang
 
 import (
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -13,8 +14,7 @@ type StructFinder struct {
 	mu            sync.Mutex
 	components    reportgen.ComponentMap
 	currentStruct string
-	fileName      string
-	dirPath       string
+	filePath      string
 	packageName   string
 }
 
@@ -26,12 +26,11 @@ func NewStructFinder() *StructFinder {
 
 // SetFile sets the directory path and file name for the current file being processed.
 // It's the beginning of a new file.
-func (sf *StructFinder) SetFile(dirPath, fileName string) {
+func (sf *StructFinder) SetFile(filePath string) {
 	sf.mu.Lock()
 	defer sf.mu.Unlock()
 
-	sf.dirPath = dirPath
-	sf.fileName = fileName
+	sf.filePath = filePath
 	sf.packageName = ""
 	sf.currentStruct = ""
 }
@@ -48,14 +47,14 @@ func (sf *StructFinder) FindComponent(line string) {
 	// Struct definition or field detection logic
 	if strings.Contains(line, "struct {") { // fast check
 		if structName := extractStructName(line); structName != "" { // detailed check
-			compKey := getStructCompKey(sf.dirPath, structName)
+			compKey := getStructCompKey(sf.filePath, structName)
 			sf.currentStruct = structName
 
 			// In Go, there is only one struct with the same name in the same directory
 			// So, we can ignore the duplicate struct definition
 			if _, ok := sf.components[compKey]; !ok {
 				sf.components[compKey] = reportgen.Component{
-					File:    sf.fileName,
+					File:    sf.filePath,
 					Package: sf.packageName,
 					Name:    structName,
 					Type:    "struct",
@@ -81,10 +80,10 @@ func (sf *StructFinder) FindComponent(line string) {
 				return
 			}
 
-			compKey := getStructCompKey(sf.dirPath, sf.currentStruct)
+			compKey := getStructCompKey(sf.filePath, sf.currentStruct)
 
 			sf.components[compKey] = reportgen.Component{
-				File:    sf.fileName,
+				File:    sf.filePath,
 				Package: sf.packageName,
 				Name:    sf.currentStruct,
 				Type:    "struct",
@@ -109,8 +108,8 @@ func (sf *StructFinder) GetComponents() reportgen.ComponentMap {
 	return compCopy
 }
 
-func getStructCompKey(dirPath, structName string) string {
-	return dirPath + ":" + structName
+func getStructCompKey(filePath, structName string) string {
+	return filepath.Dir(filePath) + ":" + structName
 }
 
 // Assumes the struct declaration line follows the pattern "type StructName struct {".

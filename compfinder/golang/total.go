@@ -20,10 +20,10 @@ func NewComponentFinder() *ComponentFinder {
 	}
 }
 
-func (cf *ComponentFinder) SetFile(dirPath, fileName string) {
-	cf.structFinder.SetFile(dirPath, fileName)
-	cf.interfaceFinder.SetFile(dirPath, fileName)
-	cf.funcFinder.SetFile(dirPath, fileName)
+func (cf *ComponentFinder) SetFile(filePath string) {
+	cf.structFinder.SetFile(filePath)
+	cf.interfaceFinder.SetFile(filePath)
+	cf.funcFinder.SetFile(filePath)
 }
 
 func (cf *ComponentFinder) FindComponent(line string) {
