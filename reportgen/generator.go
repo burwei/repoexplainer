@@ -59,6 +59,8 @@ func (rg *ReportGenerator) GenerateReport(out io.Writer) error {
 				writer.WriteString(fmt.Sprintf("             - %s\n", method))
 			}
 		}
+
+		writer.Flush()
 	}
 
 	return nil
