@@ -24,7 +24,7 @@ func TestPopulateFiles(t *testing.T) {
 				}
 				return files
 			},
-			expFileNames: []string{"file1.txt", "file2.txt"},
+			expFileNames: []string{"001", "file1.txt", "file2.txt"},
 		},
 		{
 			name: "Nested directories with files",
@@ -58,9 +58,11 @@ func TestPopulateFiles(t *testing.T) {
 			ft := NewFileTraverser(tmpDir)
 
 			// Assuming populateFiles is called inside NewFileTraverser
-			foundFileNames := make([]string, len(ft.Files))
-			for i, file := range ft.Files {
-				foundFileNames[i] = filepath.Base(file)
+			foundFileNames := []string{}
+			for _, file := range ft.Files {
+				if file.Type == "file" {
+					foundFileNames = append(foundFileNames, filepath.Base(file.Path))
+				}
 			}
 
 			assert.ElementsMatch(t, expectedFileNames, foundFileNames)
@@ -161,7 +163,7 @@ func TestPrintDirectoryStructure(t *testing.T) {
 				os.Mkdir(deeperNestedDir, 0755)
 				os.WriteFile(filepath.Join(deeperNestedDir, "nested_file2.txt"), []byte("content"), 0644)
 			},
-			expectedOutput: "/001\t\n/dir1\n\t\t- nested_file1.txt\n\t\t/dir2\n\t\t\t- nested_file2.txt\n",
+			expectedOutput: "/001\n\t/dir1\n\t\t- nested_file1.txt\n\t\t/dir2\n\t\t\t- nested_file2.txt\n",
 		},
 	}
 
