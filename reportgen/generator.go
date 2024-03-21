@@ -40,7 +40,9 @@ func (rg *ReportGenerator) GenerateReport(out io.Writer) error {
 	writer := bufio.NewWriter(out)
 	writer.WriteString(fmt.Sprintf("# %s\n\n", rg.rootDirName))
 	writer.WriteString("## directory structure\n\n")
+	writer.WriteString("```\n")
 	writer.WriteString(dirStructure)
+	writer.WriteString("```\n")
 	writer.WriteString("\n\n## components\n")
 
 	for dirPath, comps := range outputCompMap {
