@@ -10,8 +10,8 @@
 	/app
 		- app.go
 	/cmd
-		/cli
-			- main.go
+		/repoexplainer
+			- repoexplainer.go
 	/compfinder
 		- finder_factory.go
 		/golang
@@ -37,6 +37,18 @@
 
 ## Components
  - dir: /repoexplainer/compfinder/golang
+     - NewStructFinder() *StructFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+     - TestStructFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
      - ComponentFinder
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
          - package: golang
@@ -48,56 +60,26 @@
              - inMultiLineComment int
              - inMultiLineString bool
          - methods:
-             - SetFile(filePath string)
+             - GetComponents() reportgen.ComponentMap
              - FindComponent(line string)
              - checkMultilineCommentOrString(line string)
-             - GetComponents() reportgen.ComponentMap
-     - TestInterfaceFinderFindComponent(t *testing.T)
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
-         - package: golang
-         - type: func
-         - fields:
-         - methods:
-     - FuncFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+             - SetFile(filePath string)
+     - StructFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
          - package: golang
          - type: struct
          - fields:
              - mu sync.Mutex
              - components reportgen.ComponentMap
+             - currentStruct string
              - filePath string
              - packageName string
          - methods:
              - SetFile(filePath string)
              - FindComponent(line string)
-             - ConvertFuncCompKey(compKey string) (string, string)
              - GetComponents() reportgen.ComponentMap
-     - extractStructName(line string) string
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
-         - package: golang
-         - type: func
-         - fields:
-         - methods:
-     - getFuncCompKey(receiver, funcSignature string) string
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
-         - package: golang
-         - type: func
-         - fields:
-         - methods:
-     - NewFuncFinder() *FuncFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
-         - package: golang
-         - type: func
-         - fields:
-         - methods:
      - NewInterfaceFinder() *InterfaceFinder
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
-         - package: golang
-         - type: func
-         - fields:
-         - methods:
-     - NewStructFinder() *StructFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
          - package: golang
          - type: func
          - fields:
@@ -108,20 +90,20 @@
          - type: func
          - fields:
          - methods:
-     - getStructCompKey(filePath, structName string) string
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+     - getInterfaceCompKey(filePath, interfaceName string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
          - package: golang
          - type: func
          - fields:
          - methods:
-     - TestFuncFinderFindComponent(t *testing.T)
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+     - NewComponentFinder() *ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
          - package: golang
          - type: func
          - fields:
          - methods:
-     - extractFuncSignature(line string) (string, string)
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+     - TestInterfaceFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface_test.go
          - package: golang
          - type: func
          - fields:
@@ -137,48 +119,140 @@
              - filePath string
              - packageName string
          - methods:
-             - GetComponents() reportgen.ComponentMap
-             - FindComponent(line string)
              - SetFile(filePath string)
+             - FindComponent(line string)
+             - GetComponents() reportgen.ComponentMap
+     - NewFuncFinder() *FuncFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+     - extractStructName(line string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+     - TestFuncFinderFindComponent(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func_test.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+     - FuncFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: struct
+         - fields:
+             - mu sync.Mutex
+             - components reportgen.ComponentMap
+             - filePath string
+             - packageName string
+         - methods:
+             - GetComponents() reportgen.ComponentMap
+             - ConvertFuncCompKey(compKey string) (string, string)
+             - SetFile(filePath string)
+             - FindComponent(line string)
+     - getFuncCompKey(receiver, funcSignature string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
+     - getStructCompKey(filePath, structName string) string
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
+         - package: golang
+         - type: func
+         - fields:
+         - methods:
      - extractInterfaceName(line string) string
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
          - package: golang
          - type: func
          - fields:
          - methods:
-     - getInterfaceCompKey(filePath, interfaceName string) string
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/interface.go
+     - extractFuncSignature(line string) (string, string)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/func.go
          - package: golang
          - type: func
          - fields:
          - methods:
-     - StructFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct.go
-         - package: golang
+ - dir: /repoexplainer/compfinder
+     - FinderFactory
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
+         - package: compfinder
          - type: struct
          - fields:
-             - mu sync.Mutex
-             - components reportgen.ComponentMap
-             - currentStruct string
-             - filePath string
-             - packageName string
+             - Finders []reportgen.ComponentFinder
          - methods:
-             - FindComponent(line string)
-             - GetComponents() reportgen.ComponentMap
-             - SetFile(filePath string)
-     - NewComponentFinder() *ComponentFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/total.go
-         - package: golang
+             - GetFinders() []reportgen.ComponentFinder
+     - NewFinderFactory() *FinderFactory
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
+         - package: compfinder
          - type: func
          - fields:
          - methods:
-     - TestStructFinderFindComponent(t *testing.T)
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/golang/struct_test.go
-         - package: golang
+ - dir: /repoexplainer/cmd/repoexplainer
+     - main()
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/repoexplainer/repoexplainer.go
+         - package: main
          - type: func
          - fields:
          - methods:
  - dir: /repoexplainer/reportgen
+     - NewFileTraverser(rootPath string) *FileTraverser
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+     - NewReportGenerator(rootDirName, rootPath string, finderFactory FinderFactory) *ReportGenerator
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+     - FileTraverser
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - RootPath string
+             - Files []File
+             - currentFile int
+         - methods:
+             - PrintDirectoryStructure() (string, error)
+             - NextFile() (string, bool)
+             - populateFiles()
+     - ComponentFinder
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/interface.go
+         - package: reportgen
+         - type: interface
+         - fields:
+         - methods:
+             - SetFile(filePath string)
+             - FindComponent(line string)
+             - GetComponents() ComponentMap
+     - TestNextFile(t *testing.T)
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
+         - package: reportgen
+         - type: func
+         - fields:
+         - methods:
+     - ReportGenerator
+         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - rootDirName string
+             - rootPath string
+             - fileTraverser *FileTraverser
+             - finderFactory FinderFactory
+         - methods:
+             - GenerateReport(out io.Writer) error
+             - findCodeStructuresInFiles() error
+             - getOutputCompMap() OutputComponentMap
      - FinderFactory
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/interface.go
          - package: reportgen
@@ -186,25 +260,7 @@
          - fields:
          - methods:
              - GetFinders() []ComponentFinder
-     - NewReportGenerator(rootDirName, rootPath string, finderFactory FinderFactory) *ReportGenerator
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
-         - package: reportgen
-         - type: func
-         - fields:
-         - methods:
      - TestPopulateFiles(t *testing.T)
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
-         - package: reportgen
-         - type: func
-         - fields:
-         - methods:
-     - NewFileTraverser(rootPath string) *FileTraverser
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
-         - package: reportgen
-         - type: func
-         - fields:
-         - methods:
-     - TestPrintDirectoryStructure(t *testing.T)
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
          - package: reportgen
          - type: func
@@ -227,68 +283,12 @@
              - Type string
              - Path string
          - methods:
-     - TestNextFile(t *testing.T)
+     - TestPrintDirectoryStructure(t *testing.T)
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree_test.go
          - package: reportgen
          - type: func
          - fields:
          - methods:
-     - FileTraverser
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/dir_tree.go
-         - package: reportgen
-         - type: struct
-         - fields:
-             - RootPath string
-             - Files []File
-             - currentFile int
-         - methods:
-             - populateFiles()
-             - PrintDirectoryStructure() (string, error)
-             - NextFile() (string, bool)
-     - ComponentFinder
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/interface.go
-         - package: reportgen
-         - type: interface
-         - fields:
-         - methods:
-             - SetFile(filePath string)
-             - FindComponent(line string)
-             - GetComponents() ComponentMap
-     - ReportGenerator
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
-         - package: reportgen
-         - type: struct
-         - fields:
-             - rootDirName string
-             - rootPath string
-             - fileTraverser *FileTraverser
-             - finderFactory FinderFactory
-         - methods:
-             - GenerateReport(out io.Writer) error
-             - findCodeStructuresInFiles() error
-             - getOutputCompMap() OutputComponentMap
- - dir: /repoexplainer/cmd/cli
-     - main()
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/cli/main.go
-         - package: main
-         - type: func
-         - fields:
-         - methods:
- - dir: /repoexplainer/compfinder
-     - NewFinderFactory() *FinderFactory
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
-         - package: compfinder
-         - type: func
-         - fields:
-         - methods:
-     - FinderFactory
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/compfinder/finder_factory.go
-         - package: compfinder
-         - type: struct
-         - fields:
-             - Finders []reportgen.ComponentFinder
-         - methods:
-             - GetFinders() []reportgen.ComponentFinder
  - dir: /repoexplainer/app
      - Run(rootPath string) error
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/app/app.go
