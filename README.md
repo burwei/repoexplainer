@@ -10,7 +10,7 @@ I hope this tool will make it easier for developers to communicate with chat-bas
 
 ## Installation
 ```
-go install /burwei/repoexplainer/cmd/cli@latest
+go install github.com/burwei/repoexplainer/cmd/repoexplainer@latest
 ```
 
 ## How to generate repoexplain.md
@@ -63,8 +63,8 @@ It looks like this:
 	/app
 		- app.go
 	/cmd
-		/cli
-			- main.go
+		/repoexplainer
+			- repoexplainer.go
 	/compfinder
 		- finder_factory.go
 		/golang
@@ -88,13 +88,6 @@ It looks like this:
 
 
 ## components
- - dir: /repoexplainer/cmd/cli
-     - main()
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/cmd/cli/main.go
-         - package: main
-         - type: func
-         - fields:
-         - methods:
  - dir: /repoexplainer/reportgen
      - ReportGenerator
          - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
