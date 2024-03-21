@@ -22,9 +22,9 @@ func main() {
 		fmt.Println("  repoexplainer [directory]")
 		fmt.Println("  -h: Display help information")
 		fmt.Println("\nExamples:")
-		fmt.Println("  repoexplainer .                   # Analyze the current directory")
-		fmt.Println("  repoexplainer ./../another_repo   # Analyze a relative directory path")
-		fmt.Println("  repoexplainer /home/someone/repo  # Analyze an absolute directory path")
+		fmt.Println("  repoexplainer .                  # Analyze the current directory")
+		fmt.Println("  repoexplainer ./../another_repo  # Analyze a relative directory path")
+		fmt.Println("  repoexplainer /path/to/the/repo  # Analyze an absolute directory path")
 		return
 	}
 
