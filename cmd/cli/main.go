@@ -59,4 +59,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error running app: %s", err)
 	}
+
+	fmt.Println("Report generated successfully!")
 }
