@@ -56,7 +56,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 					File:    ifd.filePath,
 					Package: ifd.packageName,
 					Name:    interfaceName,
-					Type:    "interface",
+					Type:    TypeInterface,
 				}
 			}
 		}
@@ -83,7 +83,7 @@ func (ifd *InterfaceFinder) FindComponent(line string) {
 				File:    ifd.filePath,
 				Package: ifd.packageName,
 				Name:    ifd.currentInterface,
-				Type:    "interface",
+				Type:    TypeInterface,
 				Methods: append(ifd.components[compKey].Methods, method),
 			}
 		}
@@ -115,7 +115,7 @@ func extractInterfaceName(line string) string {
 		// it's not an interface definition
 		return ""
 	}
-	if parts[0] == "type" && parts[2] == "interface" {
+	if parts[0] == "type" && parts[2] == TypeInterface {
 		return parts[1]
 	}
 

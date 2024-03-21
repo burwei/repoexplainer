@@ -6,7 +6,7 @@ type Component struct {
 	File    string   `json:"file"`    // Full path to the file where the component is defined
 	Package string   `json:"package"` // Package name where the component is defined
 	Name    string   `json:"name"`    // Name of the struct
-	Type    string   `json:"type"`    // Component type (e.g., "struct", "interface", "function")
+	Type    string   `json:"type"`    // Component type (e.g., "struct", "interface" and "func")
 	Fields  []string `json:"fields"`  // Fields of the component (relevant for structs and interfaces)
 	Methods []string `json:"methods"` // Methods attached to the component (relevant for structs and interfaces)
 }

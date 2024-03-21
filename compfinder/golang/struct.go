@@ -57,7 +57,7 @@ func (sf *StructFinder) FindComponent(line string) {
 					File:    sf.filePath,
 					Package: sf.packageName,
 					Name:    structName,
-					Type:    "struct",
+					Type:    TypeStruct,
 				}
 			}
 		}
@@ -84,7 +84,7 @@ func (sf *StructFinder) FindComponent(line string) {
 				File:    sf.filePath,
 				Package: sf.packageName,
 				Name:    sf.currentStruct,
-				Type:    "struct",
+				Type:    TypeStruct,
 				Fields:  append(sf.components[compKey].Fields, field),
 				Methods: sf.components[compKey].Methods,
 			}
@@ -117,7 +117,7 @@ func extractStructName(line string) string {
 		// it's not a struct definition
 		return ""
 	}
-	if parts[0] == "type" && parts[2] == "struct" {
+	if parts[0] == "type" && parts[2] == TypeStruct {
 		return parts[1]
 	}
 

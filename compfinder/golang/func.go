@@ -53,7 +53,7 @@ func (ff *FuncFinder) FindComponent(line string) {
 				File:    ff.filePath,
 				Package: ff.packageName,
 				Name:    funcSignature,
-				Type:    "func",
+				Type:    TypeFunc,
 			}
 		}
 	}
@@ -102,7 +102,7 @@ func getFuncCompKey(receiver, funcSignature string) string {
 func extractFuncSignature(line string) (string, string) {
 	parts := strings.Fields(line)
 
-	if parts[0] != "func" {
+	if parts[0] != TypeFunc {
 		// it's not a method definition
 		return "", ""
 	}

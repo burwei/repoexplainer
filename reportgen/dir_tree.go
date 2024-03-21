@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+const (
+	TypeFile = "file"
+	TypeDir  = "dir"
+)
+
 type File struct {
 	Type string
 	Path string
@@ -16,10 +21,9 @@ type File struct {
 
 // FileTraverser traverses the files in a directory tree starting from a root directory.
 type FileTraverser struct {
-	RootPath    string              // RootPath is the starting point for the traversal
-	Files       []File              // Files stores the paths of files found during traversal
-	existsFiles map[string]struct{} // existsFiles is a set of file paths to check for existence
-	currentFile int                 // currentFile tracks the current index in the Files slice
+	RootPath    string // RootPath is the starting point for the traversal
+	Files       []File // Files stores the paths of files found during traversal
+	currentFile int    // currentFile tracks the current index in the Files slice
 }
 
 // NewFileTraverser creates a new FileTraverser for a given root directory.
@@ -27,7 +31,6 @@ func NewFileTraverser(rootPath string) *FileTraverser {
 	ft := &FileTraverser{
 		RootPath:    rootPath,
 		currentFile: -1, // Start before the first element
-		existsFiles: make(map[string]struct{}),
 	}
 	ft.populateFiles()
 	return ft
@@ -39,25 +42,17 @@ func (ft *FileTraverser) populateFiles() {
 		if err != nil {
 			return err
 		}
-
-		if d.IsDir() {
-			if strings.HasPrefix(d.Name(), ".") {
-				return fs.SkipDir // Skip hidden directories
+		if strings.HasPrefix(d.Name(), ".") { // Skip hidden files and directories
+			if d.IsDir() {
+				return fs.SkipDir
 			}
-
-			if _, ok := ft.existsFiles[path]; !ok {
-				ft.Files = append(ft.Files, File{Type: "dir", Path: path})
-				ft.existsFiles[path] = struct{}{}
-			}
-		} else {
-			if strings.HasPrefix(d.Name(), ".") {
-				return nil // Skip hidden files
-			}
-
-			ft.Files = append(ft.Files, File{Type: "file", Path: path})
-			ft.existsFiles[path] = struct{}{}
+			return nil
 		}
-
+		fileType := TypeFile
+		if d.IsDir() {
+			fileType = TypeDir
+		}
+		ft.Files = append(ft.Files, File{Type: fileType, Path: path})
 		return nil
 	})
 }
@@ -65,19 +60,17 @@ func (ft *FileTraverser) populateFiles() {
 // NextFile returns the next file in the traversal. When there are no more files, it returns false.
 func (ft *FileTraverser) NextFile() (string, bool) {
 	ft.currentFile++
-	if ft.currentFile >= len(ft.Files) {
-		return "", false // Indicates no more files are available
-	}
 
 	// Skip directories
-	for ft.Files[ft.currentFile].Type == "dir" {
+	for ft.currentFile < len(ft.Files) && ft.Files[ft.currentFile].Type == TypeDir {
 		ft.currentFile++
-		if ft.currentFile >= len(ft.Files) {
-			return "", false // Indicates no more files are available
-		}
 	}
 
-	return ft.Files[ft.currentFile].Path, true
+	if ft.currentFile < len(ft.Files) {
+		return ft.Files[ft.currentFile].Path, true
+	}
+
+	return "", false
 }
 
 // PrintDirectoryStructure prints the directory structure to the console.
@@ -86,16 +79,13 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 		return "", fmt.Errorf("no files have been traversed")
 	}
 
-	// Initialize directory structure map with root directory
+	// Create a map of directories to files to maintain the structure
 	dirStructure := map[string][]File{}
-
-	// Fill the directory structure map with files, organized by their directory paths
 	for _, file := range ft.Files {
 		dir := filepath.Dir(file.Path)
 		dirStructure[dir] = append(dirStructure[dir], File{Type: file.Type, Path: file.Path})
 	}
 
-	var builder strings.Builder
 	dirs := make([]string, 0, len(dirStructure))
 	for dir := range dirStructure {
 		dirs = append(dirs, dir)
@@ -104,7 +94,9 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 	// Generate sorted list of directories for consistent ordering
 	sort.Strings(dirs)
 
+	var builder strings.Builder
 	offset := strings.Count(ft.RootPath, string(os.PathSeparator))
+
 	for _, dir := range dirs {
 		depth := strings.Count(dir, string(os.PathSeparator)) - offset
 		if depth == -1 {
@@ -117,7 +109,7 @@ func (ft *FileTraverser) PrintDirectoryStructure() (string, error) {
 		files := dirStructure[dir]
 		for _, file := range files {
 
-			if file.Type == "dir" {
+			if file.Type == TypeDir {
 				// Also print the empty directories
 				// These directories are not present in the file list
 				// so they won't be the key in the dirStructure map
