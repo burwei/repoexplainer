@@ -89,10 +89,19 @@ It looks like this:
 		- model.go
 
 
-## components
+## Components
  - dir: /repoexplainer/reportgen
+     - Component
+         - file: /repoexplainer/reportgen/model.go
+         - package: reportgen
+         - type: struct
+         - fields:
+             - Package string `json:"package"`
+             - Type string `json:"type"`
+             - Methods []string `json:"methods"`
+         - methods:
      - ReportGenerator
-         - file: /Users/burwei/Documents/github/repoexplainer/repoexplainer/reportgen/generator.go
+         - file: /repoexplainer/reportgen/generator.go
          - package: reportgen
          - type: struct
          - fields:
@@ -101,9 +110,9 @@ It looks like this:
              - fileTraverser *FileTraverser
              - finderFactory FinderFactory
          - methods:
-             - getOutputCompMap() OutputComponentMap
              - findCodeStructuresInFiles() error
              - GenerateReport(out io.Writer) error
+             - getOutputCompMap() OutputComponentMap
 ...
 ```
 

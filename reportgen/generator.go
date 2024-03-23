@@ -48,8 +48,16 @@ func (rg *ReportGenerator) GenerateReport(out io.Writer) error {
 	for dirPath, comps := range outputCompMap {
 		writer.WriteString(fmt.Sprintf(" - dir: %s\n", dirPath))
 		for _, comp := range comps {
+			// Make the file path start with the root directory
+			filePath := strings.TrimPrefix(comp.File, rg.rootPath)
+			if strings.Contains(filePath, "/") {
+				filePath = "/" + rg.rootDirName + filePath
+			} else {
+				filePath = "/" + rg.rootDirName + "/" + filePath
+			}
+
 			writer.WriteString(fmt.Sprintf("     - %s\n", comp.Name))
-			writer.WriteString(fmt.Sprintf("         - file: %s\n", comp.File))
+			writer.WriteString(fmt.Sprintf("         - file: %s\n", filePath))
 			writer.WriteString(fmt.Sprintf("         - package: %s\n", comp.Package))
 			writer.WriteString(fmt.Sprintf("         - type: %s\n", comp.Type))
 			writer.WriteString("         - fields:\n")
