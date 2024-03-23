@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"path/filepath"
 
 	"github.com/burwei/repoexplainer/compfinder"
@@ -10,27 +10,15 @@ import (
 )
 
 const (
-	fileName = "repoexplain.md"
+	FileName = "repoexplain.md"
 )
 
-func Run(rootPath string) error {
+func Run(rootPath string, out io.Writer) error {
 	// Use the base name of the root directory as the repo name
 	rootDirName := filepath.Base(rootPath)
 	rg := reportgen.NewReportGenerator(rootDirName, rootPath, compfinder.NewFinderFactory())
 
-	// Create a new file in the current directory
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting current working directory: %s", err)
-	}
-
-	file, err := os.Create(filepath.Join(cwd, fileName))
-	if err != nil {
-		return fmt.Errorf("creating report file: %s", err)
-	}
-	defer file.Close()
-
-	err = rg.GenerateReport(file)
+	err := rg.GenerateReport(out)
 	if err != nil {
 		return fmt.Errorf("generating report: %s", err)
 	}

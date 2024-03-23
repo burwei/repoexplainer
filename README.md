@@ -1,5 +1,6 @@
 # repoexplainer
-Generate a Markdown file to describe an existing repo, so that developers can explain their whole repo to an AI chatbot more easily.  
+Generate a report to describe your local repo, and write the report to clipboard driectly.  
+You could paste it in the chat to let chat-based AI understand the overview of your repo.  
 
 Currently, it only supports Go.   
 However, other languages could be added easily.    
@@ -13,7 +14,7 @@ I hope this tool will make it easier for developers to communicate with chat-bas
 go install github.com/burwei/repoexplainer/cmd/repoexplainer@latest
 ```
 
-## How to generate repoexplain.md
+## How to generate the report
 To analyze the repo at current directory 
 ```
 repoexplainer
@@ -26,15 +27,16 @@ repoexplainer ./../another_repo
 // absolute path
 repoexplainer /path/to/some/other/repo
 ```
-Then, the report file "repoexplain.md" will be generated in the current directory.  
+Then the report will be written to your clipboard directly.  
+You could also write it to a file named "repoexplain.md" by adding the "-f" flag.    
 
-## How to use repoexplain.md
+## How to use the report
 Here are some useful prompts I frequently use:  
 ```
 Hi, I'm working on a repo and I need you help.
 Here's the overview of the repo:
 
-<upload/paste the repoexplain.md here>
+<upload/paste the report here>
 ```
 ```
 Impelement XXX for me in YYY file.
@@ -49,7 +51,7 @@ Write me the xxx_test.go file in table driven testing pattern with at least 3 te
 Add XXX function in YYY file to ZZZ.
 ```
 
-## What does the markdown file look like
+## What does the report look like
 It looks like this:
 ```
 # repoexplainer
