@@ -54,8 +54,20 @@ func main() {
 	// Clean up the path to resolve any ".." or "." segments
 	absPath := filepath.Clean(dirPath)
 
+	// Create a new file in the current directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("getting current working directory: %s", err)
+	}
+
+	file, err := os.Create(filepath.Join(cwd, app.FileName))
+	if err != nil {
+		log.Fatalf("creating report file: %s", err)
+	}
+	defer file.Close()
+
 	// Run the application with the absolute directory path
-	err := app.Run(absPath)
+	err = app.Run(absPath, file)
 	if err != nil {
 		log.Fatalf("Error running app: %s", err)
 	}
